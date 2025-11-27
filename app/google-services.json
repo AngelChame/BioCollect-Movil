@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "540093111546",
-    "project_id": "biocollect-1a8f5",
-    "storage_bucket": "biocollect-1a8f5.firebasestorage.app"
+    "project_number": "937183807878",
+    "project_id": "biocollect-ea517",
+    "storage_bucket": "biocollect-ea517.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:540093111546:android:58f91a26b3e7151033bd43",
+        "mobilesdk_app_id": "1:937183807878:android:83973ee08a8b029f38c407",
         "android_client_info": {
           "package_name": "com.angel.biocollect"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC753-F-70dz-Us29tE3B84gbZYl3JRFk0"
+          "current_key": "AIzaSyAefDifEyYoTdgjkRFlgj5-pGSmRU1Po_I"
         }
       ],
       "services": {
