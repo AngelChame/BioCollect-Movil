@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.biocollect.ui.navigation.BioCollectNavigation
-import com.example.biocollect.ui.theme.BioCollectTheme
+import com.angel.biocollect.ui.navigation.BioCollectNavigation
+import com.angel.biocollect.ui.theme.BioCollectTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

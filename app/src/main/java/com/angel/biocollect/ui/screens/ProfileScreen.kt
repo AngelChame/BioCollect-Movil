@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.biocollect.data.models.User
-import com.example.biocollect.ui.viewmodels.UserViewModel
+import com.angel.biocollect.data.models.User
+import com.angel.biocollect.ui.viewmodels.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

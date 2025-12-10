@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.biocollect.data.models.User
-import com.example.biocollect.ui.viewmodels.AuthViewModel
-import com.example.biocollect.ui.viewmodels.AuthState
+import com.angel.biocollect.data.models.User
+import com.angel.biocollect.ui.viewmodels.AuthViewModel
+import com.angel.biocollect.ui.viewmodels.AuthState
 
 @Composable
 fun SignUpScreen(

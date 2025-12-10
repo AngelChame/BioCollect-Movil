@@ -9,8 +9,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.biocollect.data.models.Collection
-import com.example.biocollect.ui.viewmodels.CollectionViewModel
+import com.angel.biocollect.data.models.Collection
+import com.angel.biocollect.ui.viewmodels.CollectionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

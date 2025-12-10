@@ -8,4 +8,4 @@ val LightGreen80 = Color(0xFF8BC34A)
 
 val Green40 = Color(0xFF689F38)
 val GreenGrey40 = Color(0xFF33691E)
-val LightGreen40 = Color(0xFF9CCC65)260)
+val LightGreen40 = Color(0xFF9CCC65)

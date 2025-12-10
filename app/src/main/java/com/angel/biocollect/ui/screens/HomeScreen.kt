@@ -1,4 +1,5 @@
-package com.angel.biocollect.ui.screens
+// ui/screens/HomeScreen.kt
+package com.angel.biocollect.ui.screens // ⬅️ Corregido a 'angel.biocollect' según tu package
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,14 +14,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector // Importación explícita
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.biocollect.data.models.Collection
-import com.example.biocollect.ui.viewmodels.UserViewModel
-import com.example.biocollect.ui.viewmodels.CollectionViewModel
+import com.angel.biocollect.data.models.Collection // ⬅️ Corregido a 'angel.biocollect'
+import com.angel.biocollect.ui.viewmodels.UserViewModel // ⬅️ Corregido a 'angel.biocollect'
+import com.angel.biocollect.ui.viewmodels.CollectionViewModel // ⬅️ Corregido a 'angel.biocollect'
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,21 +31,29 @@ fun HomeScreen(
     collectionViewModel: CollectionViewModel,
     onNavigateToCollection: (String, String, String) -> Unit,
     onNavigateToProfile: () -> Unit,
-    onNavigateToAddCollection: () -> Unit
+    onNavigateToAddCollection: () -> Unit,
 ) {
     val user by userViewModel.user.collectAsState()
     val collections by collectionViewModel.collections.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+
+    // ✅ MEJORA 1: Cálculo de especímenes cacheado con 'remember'
+    val totalSpecimens = remember(collections) {
+        collections.sumOf { it.especimenesCount }
+    }
 
     LaunchedEffect(userId) {
         userViewModel.loadUser(userId)
         collectionViewModel.loadCollections(userId)
     }
 
-    val filteredCollections = collections.filter {
-        searchQuery.isEmpty() ||
-                it.nombre.contains(searchQuery, ignoreCase = true) ||
-                it.categoria.contains(searchQuery, ignoreCase = true)
+    // Filtra las colecciones (ya protegido si 'collections' no es null)
+    val filteredCollections = remember(collections, searchQuery) {
+        collections.filter {
+            searchQuery.isEmpty() ||
+                    it.nombre.contains(searchQuery, ignoreCase = true) ||
+                    it.categoria.contains(searchQuery, ignoreCase = true)
+        }
     }
 
     Scaffold(
@@ -73,13 +82,13 @@ fun HomeScreen(
             NavigationBar {
                 NavigationBarItem(
                     selected = true,
-                    onClick = { },
+                    onClick = { /* Navegar a inicio, aunque ya estamos aquí */ },
                     icon = { Icon(Icons.Default.Home, "Inicio") },
                     label = { Text("Inicio") }
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = { },
+                    onClick = { onNavigateToCollection },
                     icon = { Icon(Icons.Default.List, "Registros") },
                     label = { Text("Registros") }
                 )
@@ -104,7 +113,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp) // Reducido el padding vertical para mejor uso de espacio
         ) {
             // Barra de búsqueda
             OutlinedTextField(
@@ -114,24 +123,9 @@ fun HomeScreen(
                 leadingIcon = { Icon(Icons.Default.Search, null) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(vertical = 16.dp), // Ajustado padding
                 shape = RoundedCornerShape(12.dp)
             )
-
-            // Sección de registros
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Registros",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-            }
 
             // Tarjetas de estadísticas
             Row(
@@ -148,7 +142,7 @@ fun HomeScreen(
                 )
                 StatCard(
                     title = "Especímenes",
-                    value = collections.sumOf { it.especimenesCount }.toString(),
+                    value = totalSpecimens.toString(), // ✅ Usa el valor cacheado
                     icon = Icons.Default.Add,
                     modifier = Modifier.weight(1f)
                 )
@@ -175,16 +169,18 @@ fun HomeScreen(
                             tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                         )
                         Text(
-                            "No hay colecciones aún",
+                            if (searchQuery.isEmpty()) "No hay colecciones aún" else "No se encontraron resultados",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                             modifier = Modifier.padding(top = 8.dp)
                         )
-                        Text(
-                            "Presiona el botón + para crear una",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                        )
+                        if (searchQuery.isEmpty()) {
+                            Text(
+                                "Presiona el botón + para crear una",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                            )
+                        }
                     }
                 }
             } else {
@@ -193,7 +189,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(filteredCollections) { collection ->
+                    items(filteredCollections, key = { it.id }) { collection -> // ✅ Añadido key para mejor rendimiento
                         CollectionCard(
                             collection = collection,
                             onClick = {
@@ -211,18 +207,21 @@ fun HomeScreen(
     }
 }
 
+// ✅ CORRECCIÓN: La firma de la función StatCard ahora usa el tipo correcto ImageVector
 @Composable
 fun StatCard(
     title: String,
     value: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector, // Utiliza el tipo importado
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        ),
+        // ✅ MEJORA 2: Añadida elevación para que parezca una tarjeta
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier
@@ -260,7 +259,9 @@ fun CollectionCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick),
+        // ✅ MEJORA 2: Añadida elevación también a CollectionCard
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box {
             // Fondo de color si no hay imagen

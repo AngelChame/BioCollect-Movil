@@ -17,8 +17,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.biocollect.data.models.Specimen
-import com.example.biocollect.ui.viewmodels.SpecimenViewModel
+import com.angel.biocollect.data.models.Specimen
+import com.angel.biocollect.ui.viewmodels.SpecimenViewModel
+import com.angel.biocollect.ui.viewmodels.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +29,8 @@ fun CollectionScreen(
     collectionCategory: String,
     viewModel: SpecimenViewModel,
     onNavigateBack: () -> Unit,
-    onNavigateToAddSpecimen: () -> Unit
+    onNavigateToAddSpecimen: () -> Unit,
+    onNavigateToProfile: () -> Unit,
 ) {
     val specimens by viewModel.specimens.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
@@ -37,10 +39,12 @@ fun CollectionScreen(
         viewModel.loadSpecimens(collectionId)
     }
 
-    val filteredSpecimens = specimens.filter {
-        searchQuery.isEmpty() ||
-                it.nombre.contains(searchQuery, ignoreCase = true) ||
-                it.familia.contains(searchQuery, ignoreCase = true)
+    val filteredSpecimens = remember(specimens, searchQuery) {
+        specimens.filter {
+            searchQuery.isEmpty() ||
+                    it.nombre.contains(searchQuery, ignoreCase = true) ||
+                    it.familia.contains(searchQuery, ignoreCase = true)
+        }
     }
 
     Scaffold(
@@ -63,19 +67,19 @@ fun CollectionScreen(
             NavigationBar {
                 NavigationBarItem(
                     selected = false,
-                    onClick = { },
+                    onClick = { /* Navegar a inicio, aunque ya estamos aquí */ },
                     icon = { Icon(Icons.Default.Home, "Inicio") },
                     label = { Text("Inicio") }
                 )
                 NavigationBarItem(
                     selected = true,
-                    onClick = { },
-                    icon = { Icon(Icons.Default.List, "Colecciones") },
-                    label = { Text("Colecciones") }
+                    onClick = {  },
+                    icon = { Icon(Icons.Default.List, "Registros") },
+                    label = { Text("Registros") }
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = { },
+                    onClick = onNavigateToProfile,
                     icon = { Icon(Icons.Default.Person, "Perfil") },
                     label = { Text("Perfil") }
                 )

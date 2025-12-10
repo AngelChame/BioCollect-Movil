@@ -1,9 +1,9 @@
 package com.angel.biocollect.data.repository
 
-import androidx.room.util.copy
 import com.angel.biocollect.data.models.User
-
-import com.angel.biocollect.data.*
+import com.angel.biocollect.data.models.CollectionWithSpecimens
+import com.angel.biocollect.data.models.Collection
+import com.angel.biocollect.data.models.Specimen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -16,7 +16,7 @@ class BioCollectRepository {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
-    // ==================== AUTH ====================
+    //==================== AUTH ====================
 
     suspend fun signUp(email: String, password: String, user: User): Result<String> {
         return try {
@@ -185,7 +185,6 @@ class BioCollectRepository {
             firestore.collection("collections").document(collectionId)
                 .update("especimenesCount", count).await()
         } catch (e: Exception) {
-            // Ignorar errores en el contador
         }
     }
 }
